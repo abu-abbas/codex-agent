@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Inter', system-ui, sans-serif;
+  color-scheme: light dark;
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 20% 35%;
+  --primary: 221 83% 53%;
+  --primary-foreground: 210 40% 98%;
+  --accent: 221 83% 53%;
+  --accent-foreground: 210 40% 98%;
+  --ring: 221 83% 53%;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+  --muted: 215 25% 17%;
+  --muted-foreground: 215 20% 65%;
+  --primary: 221 70% 60%;
+  --primary-foreground: 210 40% 98%;
+  --accent: 160 84% 39%;
+  --accent-foreground: 210 40% 98%;
+  --ring: 221 70% 60%;
+}
+
+body {
+  min-height: 100vh;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
