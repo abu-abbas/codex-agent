@@ -7,6 +7,10 @@
 - **Pusat Sinkronisasi** (`SyncCenter.vue`)
   - Memantau status koneksi (`@vueuse/core`).
   - Menampilkan log sinkronisasi dan ringkasan transaksi pending.
+- **Pengaturan Tampilan**
+  - `MainLayout.vue` menyediakan selektor tema (System/Light/Dark) dengan deteksi otomatis preferensi perangkat.
+  - Pilihan warna aksen (emerald, sapphire, amber, violet) mengubah palet CSS variable secara realtime.
+  - Integrasi `vue-i18n` menampilkan konten dalam bahasa Indonesia atau Inggris sesuai pilihan pengguna.
 - **State Management**
   - `Pinia` menyimpan seluruh transaksi, dengan persistensi ke `localStorage`.
   - `useTransactionQueue` menaruh transaksi ke IndexedDB (`idb-keyval`) dan memicu sinkronisasi.

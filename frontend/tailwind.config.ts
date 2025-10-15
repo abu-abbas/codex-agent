@@ -6,18 +6,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: 'hsl(222, 47%, 11%)',
-        foreground: 'hsl(210, 40%, 98%)',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(222, 89%, 63%)',
-          foreground: 'hsl(210, 40%, 98%)'
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))'
         },
         muted: {
-          DEFAULT: 'hsl(215, 25%, 17%)',
-          foreground: 'hsl(215, 20%, 65%)'
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))'
         },
-        accent: 'hsl(160, 84%, 39%)',
-        ring: 'hsl(222, 89%, 63%)'
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))'
+        },
+        ring: 'hsl(var(--ring))'
       }
     }
   },

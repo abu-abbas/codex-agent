@@ -2,6 +2,7 @@ import { ref, watch, type WatchStopHandle } from 'vue';
 import { v4 as uuid } from 'uuid';
 import { set, del, entries, createStore } from 'idb-keyval';
 import { useNetwork } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
 import { useTransactionStore } from '@/store/transactionStore';
 import type { TransactionPayload } from '@/types/transaction';
 import { apiClient } from '@/api/client';
@@ -21,6 +22,7 @@ let stopWatcher: WatchStopHandle | null = null;
 export function useTransactionQueue() {
   const { isOnline } = useNetwork();
   const transactionStore = useTransactionStore();
+  const { t } = useI18n();
 
   const enqueueTransaction = async (payload: TransactionPayload) => {
     const transaction = {
@@ -35,7 +37,7 @@ export function useTransactionQueue() {
 
     syncLog.value.unshift({
       status: 'info',
-      message: `Transaksi ${transaction.customerName} tersimpan lokal`,
+      message: t('queue.saved', { name: transaction.customerName }),
       timestamp: new Date().toISOString()
     });
 
@@ -49,7 +51,7 @@ export function useTransactionQueue() {
     if (!pending.length) {
       syncLog.value.unshift({
         status: 'info',
-        message: 'Tidak ada transaksi untuk sinkronisasi',
+        message: t('queue.none'),
         timestamp: new Date().toISOString()
       });
       return;
@@ -75,7 +77,7 @@ export function useTransactionQueue() {
       transactionStore.markSynced(successful);
       syncLog.value.unshift({
         status: 'success',
-        message: `${successful.length} transaksi berhasil disinkronkan`,
+        message: t('queue.syncSuccess', { count: successful.length }),
         timestamp: new Date().toISOString()
       });
     }
@@ -84,7 +86,7 @@ export function useTransactionQueue() {
       transactionStore.markFailed(failed);
       syncLog.value.unshift({
         status: 'error',
-        message: `${failed.length} transaksi gagal disinkronkan`,
+        message: t('queue.syncError', { count: failed.length }),
         timestamp: new Date().toISOString()
       });
     }

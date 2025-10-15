@@ -20,6 +20,8 @@ Proyek ini menyediakan contoh arsitektur kasir offline/online berbasis **Vue 3 +
 - **Integrasi Laravel 12** sebagai backend API dengan endpoint `transactions` dan health check.
 - **Pengelolaan state** menggunakan Pinia + Persisted State untuk menjaga transaksi lokal.
 - **Service worker PWA** untuk caching aset dasar dan memastikan aplikasi tetap dapat diakses saat offline.
+- **Tema adaptif & personalisasi warna** dengan deteksi tema sistem layaknya ChatGPT, pilihan manual mode terang/gelap, serta selektor warna aksen.
+- **Antarmuka multi-bahasa** dengan bahasa awal Indonesia dan opsi beralih ke bahasa Inggris secara langsung di aplikasi.
 
 ## Prasyarat
 
@@ -39,6 +41,15 @@ pnpm dev
 
 Buat file `.env` berdasarkan `.env.example` jika ingin mengubah endpoint API.
 
+### Pemeriksaan Kode Frontend
+
+```bash
+pnpm lint
+pnpm format
+```
+
+Perintah `lint` menjalankan ESLint untuk memeriksa potensi masalah pada berkas Vue dan TypeScript, sedangkan `format` menjalankan Prettier (beserta plugin Tailwind) untuk merapikan kode secara konsisten.
+
 ## Menjalankan Backend
 
 ```bash
@@ -52,6 +63,32 @@ php artisan serve
 
 Secara default backend menggunakan SQLite (`database/database.sqlite`). Pastikan file tersebut tersedia atau ganti konfigurasi database sesuai kebutuhan.
 
+### Formatter Backend
+
+```bash
+composer format
+```
+
+Perintah di atas menjalankan **Laravel Pint** untuk memastikan gaya penulisan kode PHP tetap konsisten di seluruh proyek.
+
+## Konfigurasi Nginx
+
+Gunakan contoh konfigurasi berikut ketika men-deploy aplikasi ini di belakang Nginx. Berkas berada pada direktori `deploy/nginx`.
+
+### Frontend (`deploy/nginx/frontend.conf`)
+
+- Melayani aset build Vite dari `/var/www/frontend/dist`.
+- Melakukan fallback ke `index.html` untuk seluruh rute SPA.
+- Meneruskan request `/api/*` ke backend Laravel pada `http://backend:9000`.
+
+### Backend (`deploy/nginx/backend.conf`)
+
+- Mengarahkan domain `api.cashier.local` ke direktori `backend/public`.
+- Menggunakan PHP-FPM socket `php8.2-fpm` dan meneruskan permintaan PHP via `fastcgi_pass`.
+- Memblokir akses ke berkas `.ht*` dan menambahkan header keamanan dasar.
+
+> **Catatan:** Sesuaikan `server_name`, lokasi root, maupun alamat upstream sesuai lingkungan server Anda (misal mengganti `backend:9000` dengan IP/hostname kontainer Laravel). Setelah menyalin berkas konfigurasi, aktifkan site menggunakan `ln -s` ke `/etc/nginx/sites-enabled/` dan lakukan `nginx -t` diikuti `systemctl reload nginx`.
+
 ## Arsitektur Sinkronisasi
 
 1. **Input Transaksi** – Pengguna mengisi data transaksi dari dashboard kasir.
@@ -60,6 +97,12 @@ Secara default backend menggunakan SQLite (`database/database.sqlite`). Pastikan
 4. **Deteksi Koneksi** – `@vueuse/core` memantau status jaringan dan memicu sinkronisasi saat online.
 5. **API Laravel** – Endpoint `POST /api/transactions` menerima payload transaksi dan menyimpannya pada database.
 6. **Log & Monitoring** – Pengguna dapat melihat log sinkronisasi dan status koneksi di halaman `Pusat Sinkronisasi`.
+
+## Pengaturan Tampilan & Bahasa
+
+- **Mode Tema** – Pilih antara `Sistem`, `Terang`, atau `Gelap`. Mode sistem mengikuti preferensi OS/Browser secara otomatis.
+- **Warna Aksen** – Tersedia beberapa palet (Emerald, Sapphire, Amber, Violet) untuk menyesuaikan warna utama aplikasi.
+- **Bahasa Antarmuka** – Bahasa default adalah Indonesia. Gunakan menu `Language` pada navigasi untuk berganti ke bahasa Inggris; semua label, placeholder, dan log akan menyesuaikan secara realtime.
 
 ## Flowchart Alur Kerja
 
