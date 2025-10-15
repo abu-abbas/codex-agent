@@ -1,0 +1,9 @@
+{
+  "name": "Offline Cashier",
+  "short_name": "Cashier",
+  "display": "standalone",
+  "start_url": ".",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": []
+}
