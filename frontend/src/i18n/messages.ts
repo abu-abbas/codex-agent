@@ -146,8 +146,8 @@ export const messages = {
       }
     },
     formatting: {
-      currency: 'USD',
-      locale: 'en-US',
+      currency: 'IDR',
+      locale: 'en-ID',
       datetime: 'en-US'
     },
     accent: {

@@ -126,6 +126,7 @@ flowchart TD
 ## Dokumentasi Tambahan
 
 - [Detail Alur & Modul](docs/flow.md)
+- [Tips Menghindari Konflik PR](docs/pr-troubleshooting.md)
 
 ## Lisensi
 
