@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TransactionResource;
-use App\Models\Transaction;
+use App\Services\TransactionService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
+    public function __construct(private readonly TransactionService $transactions)
+    {
+    }
+
     public function index(Request $request)
     {
-        $transactions = Transaction::query()
-            ->latest()
-            ->paginate($request->integer('per_page', 15));
+        $transactions = $this->transactions->paginateTransactions(
+            $request->integer('per_page', 15)
+        );
 
         return TransactionResource::collection($transactions);
     }
@@ -28,17 +31,7 @@ class TransactionController extends Controller
             'createdAt' => ['required', 'date']
         ]);
 
-        $transaction = DB::transaction(function () use ($validated) {
-            return Transaction::updateOrCreate(
-                ['external_id' => $validated['id']],
-                [
-                    'customer_name' => $validated['customerName'],
-                    'amount' => $validated['amount'],
-                    'notes' => $validated['notes'] ?? null,
-                    'transacted_at' => $validated['createdAt']
-                ]
-            );
-        });
+        $transaction = $this->transactions->upsertTransaction($validated);
 
         return TransactionResource::make($transaction)
             ->response()
