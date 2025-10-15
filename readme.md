@@ -71,6 +71,24 @@ composer format
 
 Perintah di atas menjalankan **Laravel Pint** untuk memastikan gaya penulisan kode PHP tetap konsisten di seluruh proyek.
 
+## Konfigurasi Nginx
+
+Gunakan contoh konfigurasi berikut ketika men-deploy aplikasi ini di belakang Nginx. Berkas berada pada direktori `deploy/nginx`.
+
+### Frontend (`deploy/nginx/frontend.conf`)
+
+- Melayani aset build Vite dari `/var/www/frontend/dist`.
+- Melakukan fallback ke `index.html` untuk seluruh rute SPA.
+- Meneruskan request `/api/*` ke backend Laravel pada `http://backend:9000`.
+
+### Backend (`deploy/nginx/backend.conf`)
+
+- Mengarahkan domain `api.cashier.local` ke direktori `backend/public`.
+- Menggunakan PHP-FPM socket `php8.2-fpm` dan meneruskan permintaan PHP via `fastcgi_pass`.
+- Memblokir akses ke berkas `.ht*` dan menambahkan header keamanan dasar.
+
+> **Catatan:** Sesuaikan `server_name`, lokasi root, maupun alamat upstream sesuai lingkungan server Anda (misal mengganti `backend:9000` dengan IP/hostname kontainer Laravel). Setelah menyalin berkas konfigurasi, aktifkan site menggunakan `ln -s` ke `/etc/nginx/sites-enabled/` dan lakukan `nginx -t` diikuti `systemctl reload nginx`.
+
 ## Arsitektur Sinkronisasi
 
 1. **Input Transaksi** – Pengguna mengisi data transaksi dari dashboard kasir.
